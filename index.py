@@ -1,4 +1,3 @@
-from metodos import obter_cidade
 from tkinter import ttk, filedialog, scrolledtext
 from urllib.parse import urlencode
 import http.client, base64, json, sys, os, re, tkinter as tk, pandas as pd
@@ -53,7 +52,7 @@ class JanelaComConsole:
 
 def gerar_token():
     #Alterar a url de homologacao para produção depois de finalizado
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/gera-token"
     #Código do usuário master
     usuario = "93862"
@@ -82,13 +81,53 @@ def gerar_token():
         return None
 
 
+token_gerado = gerar_token()
+
+
+def obter_cidade(token, uf=str, nome=str):
+    uf = uf.upper()
+    nome = nome.upper()
+    nome = nome.replace("Ã", "A").replace("À", "A").replace("Á", "A").replace("Â", "A")
+    nome = nome.replace("Õ", "O").replace("Ò", "O").replace("Ó", "O").replace("Ô", "O")
+    nome = nome.replace("È", "E").replace("É", "E").replace("Ê", "E")
+    nome = nome.replace("Í", "I").replace("Ì", "I").replace("Î", "I")
+    nome = nome.replace("Ú", "U").replace("Ù", "U").replace("Û", "U")
+    nome = nome.replace(" ", "_").strip()
+
+    url = "webservice.facta.com.br"
+    endpoint = f"/proposta-combos/cidade?estado={uf}&nome_cidade={nome}"
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+    }
+
+    conn = http.client.HTTPSConnection(url)
+    conn.request("GET", endpoint, headers=headers)
+
+    response = conn.getresponse()
+    city = json.loads(response.read().decode("utf-8"))
+    conn.close()
+    with open("cidade.json", "w") as json_file:
+        json.dump(city, json_file, indent=2)
+    cidade = city['cidade']
+    chave_cidade = list(cidade.keys())[0]
+    if city['erro'] == True:
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"{cidade}")
+        
+    else:
+        pass
+    return chave_cidade
+
+
+
 def select_file_facta(token_gerado):
     arquivo_path = filedialog.askopenfilename(
         title="Selecione um arquivo", filetypes=[("Arquivos Excel", "*.xlsx;*.xls")])
     if arquivo_path:
         nome_arquivo = os.path.basename(arquivo_path)
         JanelaComConsole.adicionar_print(JanelaComConsole, f"Arquivo selecionado: {nome_arquivo}")
-        base = pd.read_excel('base.xlsx')
+        base = pd.read_excel(arquivo_path)
         nome = str(base['NOME'].values[0]).upper()
         cpf = str(base['CPF'].values[0]).replace("-", "").replace(".", "")
         data_nascimento = str(base['NASCIMENTO'].values[0])
@@ -173,7 +212,7 @@ def select_file_facta(token_gerado):
 
 def simula_port_refin(token, cliente):
     # Essa função passa um dicionário codificado para o request 
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/proposta/operacoes-disponiveis"
     produto = "D"
     tipo_operacao = "003500"
@@ -219,21 +258,23 @@ def simula_port_refin(token, cliente):
     response_dict = json.loads(content)
     if response_dict['erro'] == True:
         print(response_dict)
-        JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict}")
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"Tabela Port:\n{response_dict["tabelas_portabilidade"]}")
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"Tabela Refin:\n{response_dict["tabelas_refin_portabilidade"]}")
     else:
-        print(f"Sucesso na simulação")
         JanelaComConsole.adicionar_print(JanelaComConsole, "Sucesso na simulação")
+    with open("simulacao.json", "w") as json_file:
+        json.dump(response_dict, json_file, indent=2)
     connection.close()
     return response_dict
 
 
 def grava_port(resultado_dict, token):
     # Essa função vai passar uma url no body com os dados retornados da função simula_port_refin
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/proposta/etapa1-simulador"
     cpf = cliente["cpf"]
     data_nascimento = cliente["data_nascimento"]
-    login_certificado = "93862"
+    login_certificado = "93862_01067744509"
     valor_operacao = resultado_dict['tabelas_portabilidade'][0]['contrato']
     coeficiente = resultado_dict['tabelas_portabilidade'][0]['coeficiente']
     valor_parcela = resultado_dict['tabelas_portabilidade'][0]['parcela']
@@ -272,7 +313,7 @@ def grava_port(resultado_dict, token):
 
 def grava_refin(id_simulador, resultado_dict, token):
     # Essa função vai passar uma url no body com os dados do refin e salvar no id_simulador da função grava_port
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/proposta/etapa1-refin-portabilidade"
     banco_compra = cliente["banco_originador"]
     contrato_compra = cliente["numero_contrato"]
@@ -314,7 +355,7 @@ def grava_refin(id_simulador, resultado_dict, token):
 def dados_pessoais(id_simulador, token, cliente):
     # Essa função vai passar uma url no body com os dados do cliente e salvar no id_simulador da função grava_port
     # Que já possui os dados do refin da função grava_refin
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/proposta/etapa2-dados-pessoais"
     cpf = cliente["cpf"]
     nome = cliente["nome"]
@@ -389,7 +430,7 @@ def cadastro_proposta(token, codigo_cliente, id_simulador):
     # Essa função vai passar uma url no body com o código do cliente gerado pela função dados_pessoais
     # E tbm os dados da proposta através do id vinculado
     # https://webservice.facta.com.br/proposta/etapa3-proposta-cadastro
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/proposta/etapa3-proposta-cadastro"
     body = f"codigo_cliente={codigo_cliente}&id_simulador={id_simulador}"
 
@@ -409,7 +450,7 @@ def cadastro_proposta(token, codigo_cliente, id_simulador):
 
 def envio_link(token, codigo_af):
     # Essa função vai passar uma url no body com o codigo af gerado pelo cadastro proposta e o tipo de envio
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/proposta/envio-link"
     body = (
         f"codigo_af={codigo_af}&tipo_envio=whatsapp"
@@ -430,9 +471,6 @@ def envio_link(token, codigo_af):
     return response_dict
 
 
-token_gerado = gerar_token()
-
-
 def digitar_port(token_gerado):
     resultado_dict = simula_port_refin(token_gerado, cliente)
     simulador = grava_port(resultado_dict, token_gerado)
@@ -441,8 +479,12 @@ def digitar_port(token_gerado):
     cadastro_cliente = dados_pessoais(id_simulador, token_gerado, cliente)
     codigo_cliente = cadastro_cliente["codigo_cliente"]
     proposta = cadastro_proposta(token_gerado, codigo_cliente, id_simulador)
-    envio_link(token_gerado, proposta['codigo_refin_port'])
-    JanelaComConsole.adicionar_print(JanelaComConsole, f"{proposta['mensagem']}\nADE Port: {proposta['codigo']}\nADE Refin: {proposta['codigo_refin_port']}\n{proposta['url_formalizacao']}\n")
+    try:
+        envio_link(token_gerado, proposta['codigo'])
+        envio_link(token_gerado, proposta['codigo_refin_port'])
+    except:
+        JanelaComConsole.adicionar_print(JanelaComConsole, "Falha ao enviar o link")    
+    JanelaComConsole.adicionar_print(JanelaComConsole, f"{proposta['mensagem']}\nAF Port: {proposta['codigo']}\nAF Refin: {proposta['codigo_refin_port']}\n{proposta['url_formalizacao']}\n")
     # print(f"{proposta['mensagem']}\nADE Port: {proposta['codigo']}\nADE Refin: {proposta['codigo_refin_port']}\n{proposta['url_formalizacao']}\n")
 
 
