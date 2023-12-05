@@ -92,6 +92,7 @@ def obter_cidade(token, uf=str, nome=str):
     nome = nome.replace("È", "E").replace("É", "E").replace("Ê", "E")
     nome = nome.replace("Í", "I").replace("Ì", "I").replace("Î", "I")
     nome = nome.replace("Ú", "U").replace("Ù", "U").replace("Û", "U")
+    nome = nome.replace("Ç", "C")
     nome = nome.replace(" ", "_").strip()
 
     url = "webservice.facta.com.br"
@@ -113,12 +114,10 @@ def obter_cidade(token, uf=str, nome=str):
     cidade = city['cidade']
     chave_cidade = list(cidade.keys())[0]
     if city['erro'] == True:
-        JanelaComConsole.adicionar_print(JanelaComConsole, f"{cidade}")
-        
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"{city}")
     else:
         pass
     return chave_cidade
-
 
 
 def select_file_facta(token_gerado):

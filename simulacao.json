@@ -2,19 +2,19 @@
   "erro": false,
   "tabelas_portabilidade": [
     {
-      "tabela": "45071 - INSS CIP Flex 5 PN-S",
-      "codigoTabela": 106441,
+      "tabela": "45039 - INSS CIP Flex 1 PN-S",
+      "codigoTabela": 106437,
       "convenio": "FACTA FINANCEIRA",
       "idConvenio": 3,
       "tipoOperacao": "PORTABILIDADE DIGITAL",
       "idTipoOperacao": 17,
       "averbador": "INSS",
       "idAverbador": 3,
-      "taxa": 1.4,
-      "prazo": 55,
-      "coeficiente": 0.026375,
-      "contrato": 9653.31,
-      "parcela": 254.61,
+      "taxa": 1.8,
+      "prazo": 70,
+      "coeficiente": 0.025927,
+      "contrato": 8998,
+      "parcela": 233.29,
       "carencia": "08/01/2024"
     }
   ],
@@ -30,10 +30,10 @@
       "idAverbador": 3,
       "taxa": 1.7,
       "prazo": 84,
-      "coeficiente": 0.0257356,
-      "contrato": 10332.42,
-      "parcela": 259,
-      "valor_liquido": 679.11,
+      "coeficiente": 0.0261646,
+      "contrato": 9192.51,
+      "parcela": 233.63,
+      "valor_liquido": 194.51,
       "carencia": "08/01/2024"
     },
     {
@@ -47,10 +47,10 @@
       "idAverbador": 3,
       "taxa": 1.6,
       "prazo": 84,
-      "coeficiente": 0.02535232,
-      "contrato": 10478.72,
-      "parcela": 259,
-      "valor_liquido": 825.41,
+      "coeficiente": 0.02574992,
+      "contrato": 9331.59,
+      "parcela": 233.63,
+      "valor_liquido": 333.59,
       "carencia": "08/01/2024"
     },
     {
@@ -64,10 +64,10 @@
       "idAverbador": 3,
       "taxa": 1.55,
       "prazo": 84,
-      "coeficiente": 0.02493232,
-      "contrato": 10646.93,
-      "parcela": 259,
-      "valor_liquido": 993.62,
+      "coeficiente": 0.02531088,
+      "contrato": 9484.21,
+      "parcela": 233.63,
+      "valor_liquido": 486.21,
       "carencia": "08/01/2024"
     },
     {
@@ -81,10 +81,10 @@
       "idAverbador": 3,
       "taxa": 1.5,
       "prazo": 84,
-      "coeficiente": 0.02451456,
-      "contrato": 10817.46,
-      "parcela": 259,
-      "valor_liquido": 1164.15,
+      "coeficiente": 0.02487632,
+      "contrato": 9640.66,
+      "parcela": 233.63,
+      "valor_liquido": 642.66,
       "carencia": "08/01/2024"
     }
   ]
