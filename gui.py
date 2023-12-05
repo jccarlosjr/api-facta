@@ -24,53 +24,53 @@ class JanelaComConsole:
         sys.stdout = self.ConsoleRedirector(self.console)
 
         # Elementos adicionais
-        info_label = ttk.Label(root, text="Selecione um arquivo")
-        info_label.grid(row=0, column=0, columnspan=5)
+        info_label = ttk.Label(root, text="DADOS DO CLIENTE:")
+        info_label.grid(row=1, column=0, columnspan=5, pady=5)
 
         parcela_confirma = ttk.Button(root, text="Select", command=lambda: select_file_facta())
-        parcela_confirma.grid(row=1, column=1)
+        parcela_confirma.grid(row=0, column=1, pady=5)
 
         botao = ttk.Button(root, text="Digitar")
-        botao.grid(row=1, column=2)
+        botao.grid(row=0, column=2, pady=5)
 
-        ttk.Label(root, text="Nome:").grid(row=2, column=0)
-        ttk.Label(root, text="CPF:").grid(row=2, column=1)
-        ttk.Label(root, text="Nascimento:").grid(row=2, column=2)
-        ttk.Label(root, text="RG:").grid(row=2, column=3)
+        ttk.Label(root, text="Nome:").grid(row=2, column=0, padx=2)
+        ttk.Label(root, text="CPF:").grid(row=2, column=1, padx=2)
+        ttk.Label(root, text="Nascimento:").grid(row=2, column=2, padx=2)
+        ttk.Label(root, text="RG:").grid(row=2, column=3, padx=2)
 
 
         global name_entry
         name_entry = ttk.Entry(root, justify="center")
-        name_entry.grid(row=3, column=0)
+        name_entry.grid(row=3, column=0, padx=2)
 
         global cpf_entry
         cpf_entry = ttk.Entry(root, justify="center")
-        cpf_entry.grid(row=3, column=1)
+        cpf_entry.grid(row=3, column=1, padx=2)
 
         global bdate_entry
         bdate_entry = ttk.Entry(root, justify="center")
-        bdate_entry.grid(row=3, column=2)
+        bdate_entry.grid(row=3, column=2, padx=2)
 
         global rg_entry
         rg_entry = ttk.Entry(root, justify="center")
         rg_entry.insert(0, 'rg')
-        rg_entry.grid(row=3, column=3)
+        rg_entry.grid(row=3, column=3, padx=2)
 
-        ttk.Label(root, text="Mãe:").grid(row=4, column=0)
-        ttk.Label(root, text="Pai:").grid(row=4, column=1)
-        ttk.Label(root, text="Cidade:").grid(row=4, column=2)
+        ttk.Label(root, text="Mãe:").grid(row=4, column=0, padx=2)
+        ttk.Label(root, text="Pai:").grid(row=4, column=1, padx=2)
+        ttk.Label(root, text="Cidade:").grid(row=4, column=2, padx=2)
 
         mae_entry = ttk.Entry(root, justify="center")
         mae_entry.insert(0, 'mae')
-        mae_entry.grid(row=5, column=0)
+        mae_entry.grid(row=5, column=0, padx=2)
 
         pai_entry = ttk.Entry(root, justify="center")
         pai_entry.insert(0, 'pai')
-        pai_entry.grid(row=5, column=1)
+        pai_entry.grid(row=5, column=1, padx=2)
 
         city_entry = ttk.Entry(root, justify="center")
         city_entry.insert(0, 'city')
-        city_entry.grid(row=5, column=2)
+        city_entry.grid(row=5, column=2, padx=2)
 
     class ConsoleRedirector:
         def __init__(self, console):
