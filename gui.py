@@ -391,6 +391,9 @@ def clear_entry():
     saldo_entry.delete(0, tk.END)
     uf_endereco_entry.delete(0, tk.END)
     bairro_entry.delete(0, tk.END)
+    num_entry.delete(0, tk.END)
+    sexo_entry.delete(0, tk.END)
+    uf_nascimento_entry.delete(0, tk.END)
 
 
 def simula_port_refin(token):
