@@ -1,9 +1,4 @@
 {
-  "erro": false,
-  "cidade": {
-    "25276": {
-      "nome": "ITAPEVI",
-      "estado": "SP"
-    }
-  }
+  "erro": true,
+  "mensagem": "Nenhuma cidade"
 }

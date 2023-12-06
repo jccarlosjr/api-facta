@@ -126,6 +126,7 @@ def select_file_facta(token_gerado):
     if arquivo_path:
         nome_arquivo = os.path.basename(arquivo_path)
         JanelaComConsole.adicionar_print(JanelaComConsole, f"Arquivo selecionado: {nome_arquivo}")
+        global base
         base = pd.read_excel(arquivo_path)
         nome = str(base['NOME'].values[0]).upper()
         cpf = str(base['CPF'].values[0]).replace("-", "").replace(".", "")
@@ -185,7 +186,7 @@ def select_file_facta(token_gerado):
             "cidade_endereco": cidade_endereco,
             "estado": uf_endereco,
             "cidade": obter_cidade(token_gerado, uf_endereco, cidade_endereco),
-            "nomae_mae": mae,
+            "nome_mae": mae,
             "nome_pai": pai,
             "valor_patrimonio": "1",
             "cliente_iletrado_impossibilitado": "N",
@@ -257,8 +258,8 @@ def simula_port_refin(token, cliente):
     response_dict = json.loads(content)
     if response_dict['erro'] == True:
         print(response_dict)
-        JanelaComConsole.adicionar_print(JanelaComConsole, f"Tabela Port:\n{response_dict["tabelas_portabilidade"]}")
-        JanelaComConsole.adicionar_print(JanelaComConsole, f"Tabela Refin:\n{response_dict["tabelas_refin_portabilidade"]}")
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"Tabela Port:\n{response_dict['tabelas_portabilidade']}")
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"Tabela Refin:\n{response_dict['tabelas_refin_portabilidade']}")
     else:
         JanelaComConsole.adicionar_print(JanelaComConsole, "Sucesso na simulação")
     with open("simulacao.json", "w") as json_file:
@@ -377,7 +378,7 @@ def dados_pessoais(id_simulador, token, cliente):
     bairro = cliente["bairro"]
     cidade = cliente["cidade"]
     estado = cliente["estado"]
-    nome_mae = cliente["nomae_mae"]
+    nome_mae = cliente["nome_mae"]
     nome_pai = cliente["nome_pai"]
     valor_patrimonio = cliente["valor_patrimonio"]
     cliente_iletrado_impossibilitado = cliente["cliente_iletrado_impossibilitado"]
@@ -484,6 +485,7 @@ def digitar_port(token_gerado):
     except:
         JanelaComConsole.adicionar_print(JanelaComConsole, "Falha ao enviar o link")    
     JanelaComConsole.adicionar_print(JanelaComConsole, f"{proposta['mensagem']}\nAF Port: {proposta['codigo']}\nAF Refin: {proposta['codigo_refin_port']}\n{proposta['url_formalizacao']}\n")
+    base = None
     # print(f"{proposta['mensagem']}\nADE Port: {proposta['codigo']}\nADE Refin: {proposta['codigo_refin_port']}\n{proposta['url_formalizacao']}\n")
 
 

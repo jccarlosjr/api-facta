@@ -2,19 +2,19 @@
   "erro": false,
   "tabelas_portabilidade": [
     {
-      "tabela": "45063 - INSS CIP Flex 4 PN-S",
-      "codigoTabela": 106440,
+      "tabela": "45071 - INSS CIP Flex 5 PN-S",
+      "codigoTabela": 106441,
       "convenio": "FACTA FINANCEIRA",
       "idConvenio": 3,
       "tipoOperacao": "PORTABILIDADE DIGITAL",
       "idTipoOperacao": 17,
       "averbador": "INSS",
       "idAverbador": 3,
-      "taxa": 1.5,
-      "prazo": 57,
-      "coeficiente": 0.026798,
-      "contrato": 5095,
-      "parcela": 136.54,
+      "taxa": 1.4,
+      "prazo": 56,
+      "coeficiente": 0.026409,
+      "contrato": 6580.43,
+      "parcela": 173.78,
       "carencia": "08/01/2024"
     }
   ],
@@ -31,9 +31,9 @@
       "taxa": 1.7,
       "prazo": 84,
       "coeficiente": 0.0261646,
-      "contrato": 5384.05,
-      "parcela": 137.13,
-      "valor_liquido": 289.05,
+      "contrato": 6858.74,
+      "parcela": 174.52,
+      "valor_liquido": 278.31,
       "carencia": "08/01/2024"
     },
     {
@@ -48,9 +48,9 @@
       "taxa": 1.6,
       "prazo": 84,
       "coeficiente": 0.02574992,
-      "contrato": 5466.56,
-      "parcela": 137.13,
-      "valor_liquido": 371.56,
+      "contrato": 6962.51,
+      "parcela": 174.52,
+      "valor_liquido": 382.08,
       "carencia": "08/01/2024"
     },
     {
@@ -65,9 +65,9 @@
       "taxa": 1.55,
       "prazo": 84,
       "coeficiente": 0.02531088,
-      "contrato": 5555.95,
-      "parcela": 137.13,
-      "valor_liquido": 460.95,
+      "contrato": 7076.37,
+      "parcela": 174.52,
+      "valor_liquido": 495.94,
       "carencia": "08/01/2024"
     },
     {
@@ -82,9 +82,9 @@
       "taxa": 1.5,
       "prazo": 84,
       "coeficiente": 0.02487632,
-      "contrato": 5647.6,
-      "parcela": 137.13,
-      "valor_liquido": 552.6,
+      "contrato": 7193.09,
+      "parcela": 174.52,
+      "valor_liquido": 612.66,
       "carencia": "08/01/2024"
     }
   ]
