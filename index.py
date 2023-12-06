@@ -234,7 +234,7 @@ def simula_port_refin(token, cliente):
         "convenio": convenio,
         "opcao_valor": opcao_valor,
         "valor_parcela": valor_parcela,
-        "prazo": prazo,
+        "prazo": "84",
         "cpf": cpf,
         "data_nascimento": data_nascimento,
         "prazo_restante": prazo_restante,

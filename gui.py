@@ -6,41 +6,47 @@ import http.client, base64, json, sys, os, re, tkinter as tk, pandas as pd
 class JanelaComConsole:
     def __init__(self, root):
         self.root = root
-        self.root.title("API digitação port facta")
+        self.root.title("Digitação Facta")
 
         # Criar um widget Text para o console
         self.console = scrolledtext.ScrolledText(root, wrap="none", width=40, height=10)
         self.console.grid(row=16, column=0, columnspan=5, sticky="nsew")
+        nova_fonte = ("Sans Serif", 9, "bold")
 
         # Configurar o peso das colunas e linhas para expandir com a janela
         #self.root.grid_rowconfigure(3, weight=1)
         #self.root.grid_columnconfigure(0, weight=1)
 
         # Centralizar o texto no console
-        self.console.tag_configure("center", justify="center")
+        self.console.tag_configure("center", justify="center", font=nova_fonte)
 
         # Redefinir a função print para escrever no console
         self.stdout_original = sys.stdout
         sys.stdout = self.ConsoleRedirector(self.console)
 
         # Elementos adicionais
-        info_label = ttk.Label(root, text="DADOS DO CLIENTE")
+        info_label = ttk.Label(root, text="DADOS DO CLIENTE", font=nova_fonte)
         info_label.grid(row=1, column=0, columnspan=5, pady=5)
 
-        parcela_confirma = ttk.Button(root, text="Select", command=lambda: select_file_facta())
+        parcela_confirma = ttk.Button(root, text="Select", style='Estilo.TButton', command=lambda: select_file_facta())
         parcela_confirma.grid(row=0, column=1, pady=5)
 
-        botao = ttk.Button(root, text="Digitar", command=lambda: digitar_port(token_gerado))
+        style_btt = ttk.Style()
+        style_btt.configure('Estilo.TButton', font=("Sans Serif", 9, "bold"))
+
+
+        botao = ttk.Button(root, text="Digitar", style='Estilo.TButton', command=lambda: digitar_port(token_gerado))
         botao.grid(row=0, column=2, pady=5)
 
-        botao = ttk.Button(root, text="Limpar", command=clear_entry)
+        botao = ttk.Button(root, text="Limpar", style='Estilo.TButton', command=clear_entry)
         botao.grid(row=0, column=3, pady=5)
 
-        ttk.Label(root, text="Nome:").grid(row=2, column=0, padx=2)
-        ttk.Label(root, text="CPF:").grid(row=2, column=1, padx=2)
-        ttk.Label(root, text="Nascimento:").grid(row=2, column=2, padx=2)
-        ttk.Label(root, text="UF Nascimento:").grid(row=2, column=3, padx=2)
-        ttk.Label(root, text="RG:").grid(row=2, column=4, padx=2)
+        ttk.Label(root, text="Nome:", font=nova_fonte).grid(row=2, column=0, padx=2)
+        ttk.Label(root, text="CPF:", font=nova_fonte).grid(row=2, column=1, padx=2)
+        ttk.Label(root, text="Nascimento:", font=nova_fonte).grid(row=2, column=2, padx=2)
+        ttk.Label(root, text="UF Nascimento:", font=nova_fonte).grid(row=2, column=3, padx=2)
+        ttk.Label(root, text="Cidade Natural:", font=nova_fonte).grid(row=2, column=4, padx=2)
+        
 
         global name_entry
         name_entry = ttk.Entry(root, justify="center")
@@ -58,16 +64,16 @@ class JanelaComConsole:
         uf_nascimento_entry = ttk.Entry(root, justify="center")
         uf_nascimento_entry.grid(row=3, column=3, padx=2)
 
-        global rg_entry
-        rg_entry = ttk.Entry(root, justify="center")
-        rg_entry.grid(row=3, column=4, padx=2)
+        global city_entry
+        city_entry = ttk.Entry(root, justify="center")
+        city_entry.grid(row=3, column=4, padx=2)
 
 
-        ttk.Label(root, text="Mãe:").grid(row=4, column=0, padx=2)
-        ttk.Label(root, text="Pai:").grid(row=4, column=1, padx=2)
-        ttk.Label(root, text="Cidade Natural:").grid(row=4, column=2, padx=2)
-        ttk.Label(root, text="Celular:").grid(row=4, column=3, padx=2)
-        ttk.Label(root, text="Sexo:").grid(row=4, column=4, padx=2)
+        ttk.Label(root, text="Mãe:", font=nova_fonte).grid(row=4, column=0, padx=2)
+        ttk.Label(root, text="Pai:", font=nova_fonte).grid(row=4, column=1, padx=2)
+        ttk.Label(root, text="RG:", font=nova_fonte).grid(row=4, column=2, padx=2)
+        ttk.Label(root, text="Celular:", font=nova_fonte).grid(row=4, column=3, padx=2)
+        ttk.Label(root, text="Sexo:", font=nova_fonte).grid(row=4, column=4, padx=2)
 
         global mae_entry
         mae_entry = ttk.Entry(root, justify="center")
@@ -77,9 +83,9 @@ class JanelaComConsole:
         pai_entry = ttk.Entry(root, justify="center")
         pai_entry.grid(row=5, column=1, padx=2)
 
-        global city_entry
-        city_entry = ttk.Entry(root, justify="center")
-        city_entry.grid(row=5, column=2, padx=2)
+        global rg_entry
+        rg_entry = ttk.Entry(root, justify="center")
+        rg_entry.grid(row=5, column=2, padx=2)
 
         global cel_entry
         cel_entry = ttk.Entry(root, justify="center")
@@ -89,11 +95,11 @@ class JanelaComConsole:
         sexo_entry = ttk.Entry(root, justify="center")
         sexo_entry.grid(row=5, column=4, padx=2)
 
-        ttk.Label(root, text="CEP:").grid(row=6, column=0, padx=2)
-        ttk.Label(root, text="Endereço:").grid(row=6, column=1, padx=2)
-        ttk.Label(root, text="Nº").grid(row=6, column=2, padx=2)
-        ttk.Label(root, text="Cidade End:").grid(row=6, column=3, padx=2)
-        ttk.Label(root, text="Bairro:").grid(row=6, column=4, padx=2)
+        ttk.Label(root, text="CEP:", font=nova_fonte).grid(row=6, column=0, padx=2)
+        ttk.Label(root, text="Endereço:", font=nova_fonte).grid(row=6, column=1, padx=2)
+        ttk.Label(root, text="Nº", font=nova_fonte).grid(row=6, column=2, padx=2)
+        ttk.Label(root, text="Cidade End:", font=nova_fonte).grid(row=6, column=3, padx=2)
+        ttk.Label(root, text="Bairro:", font=nova_fonte).grid(row=6, column=4, padx=2)
         
         global cep_entry
         cep_entry = ttk.Entry(root, justify="center")
@@ -115,11 +121,11 @@ class JanelaComConsole:
         bairro_entry = ttk.Entry(root, justify="center")
         bairro_entry.grid(row=7, column=4, padx=2)
 
-        ttk.Label(root, text="UF Endereço:").grid(row=8, column=0, padx=2)
-        ttk.Label(root, text="Espécie:").grid(row=8, column=1, padx=2)
-        ttk.Label(root, text="Matrícula:").grid(row=8, column=2, padx=2)
-        ttk.Label(root, text="Renda:").grid(row=8, column=3, padx=2)
-        ttk.Label(root, text="UF Benefício").grid(row=8, column=4, padx=2)
+        ttk.Label(root, text="UF Endereço:", font=nova_fonte).grid(row=8, column=0, padx=2)
+        ttk.Label(root, text="Espécie:", font=nova_fonte).grid(row=8, column=1, padx=2)
+        ttk.Label(root, text="Matrícula:", font=nova_fonte).grid(row=8, column=2, padx=2)
+        ttk.Label(root, text="Renda:", font=nova_fonte).grid(row=8, column=3, padx=2)
+        ttk.Label(root, text="UF Benefício", font=nova_fonte).grid(row=8, column=4, padx=2)
 
         global uf_endereco_entry
         uf_endereco_entry = ttk.Entry(root, justify="center")
@@ -141,10 +147,10 @@ class JanelaComConsole:
         uf_beneficio_entry = ttk.Entry(root, justify="center")
         uf_beneficio_entry.grid(row=9, column=4, padx=2)
 
-        ttk.Label(root, text="Banco:").grid(row=10, column=0, padx=2)
-        ttk.Label(root, text="Agência:").grid(row=10, column=1, padx=2)
-        ttk.Label(root, text="Conta:").grid(row=10, column=2, padx=2)
-        ttk.Label(root, text="Parcela").grid(row=10, column=3, padx=2)
+        ttk.Label(root, text="Banco:", font=nova_fonte).grid(row=10, column=0, padx=2)
+        ttk.Label(root, text="Agência:", font=nova_fonte).grid(row=10, column=1, padx=2)
+        ttk.Label(root, text="Conta:", font=nova_fonte).grid(row=10, column=2, padx=2)
+        ttk.Label(root, text="Parcela", font=nova_fonte).grid(row=10, column=3, padx=2)
 
         global banco_entry
         banco_entry = ttk.Entry(root, justify="center")
@@ -162,11 +168,11 @@ class JanelaComConsole:
         parcela_entry = ttk.Entry(root, justify="center")
         parcela_entry.grid(row=11, column=3, padx=2)
 
-        ttk.Label(root, text="Banco Originador:").grid(row=12, column=0, padx=2)
-        ttk.Label(root, text="Contrato:").grid(row=12, column=1, padx=2)
-        ttk.Label(root, text="Prazo Original:").grid(row=12, column=2, padx=2)
-        ttk.Label(root, text="Prazo Restante").grid(row=12, column=3, padx=2)
-        ttk.Label(root, text="Saldo Devedor").grid(row=12, column=4, padx=2)
+        ttk.Label(root, text="Banco Originador:", font=nova_fonte).grid(row=12, column=0, padx=2)
+        ttk.Label(root, text="Contrato:", font=nova_fonte).grid(row=12, column=1, padx=2)
+        ttk.Label(root, text="Prazo Original:", font=nova_fonte).grid(row=12, column=2, padx=2)
+        ttk.Label(root, text="Prazo Restante", font=nova_fonte).grid(row=12, column=3, padx=2)
+        ttk.Label(root, text="Saldo Devedor", font=nova_fonte).grid(row=12, column=4, padx=2)
 
         global banco_origem_entry
         banco_origem_entry = ttk.Entry(root, justify="center")
@@ -204,9 +210,26 @@ class JanelaComConsole:
         self.root.destroy()
 
 
+    def centralizar_janela(root):
+        root.update_idletasks()
+        largura_janela = root.winfo_width()
+        altura_janela = root.winfo_height()
+
+        # Obtém a resolução da tela
+        largura_tela = root.winfo_screenwidth()
+        altura_tela = root.winfo_screenheight()
+
+        # Calcula a posição para centralizar a janela
+        x_pos = (largura_tela - largura_janela) // 2
+        y_pos = (altura_tela - altura_janela) // 2
+
+        # Define a posição da janela
+        root.geometry(f"+{x_pos}+{y_pos}")
+
+
 def gerar_token():
     # Alterar a url de homologacao para produção depois de finalizado
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/gera-token"
     # Código do usuário master
     usuario = "93862"
@@ -267,7 +290,7 @@ def obter_cidade(token, uf=str, nome=str):
     nome = nome.replace("Ç", "C")
     nome = nome.replace(" ", "_").strip()
 
-    url = "webservice-homol.facta.com.br"
+    url = "webservice.facta.com.br"
     endpoint = f"/proposta-combos/cidade?estado={uf}&nome_cidade={nome}"
 
     headers = {
@@ -283,12 +306,11 @@ def obter_cidade(token, uf=str, nome=str):
     conn.close()
     with open("cidade.json", "w") as json_file:
         json.dump(city, json_file, indent=2)
-    cidade = city['cidade']
-    chave_cidade = list(cidade.keys())[0]
     if city['erro'] == True:
-        JanelaComConsole.adicionar_print(JanelaComConsole, f"{city}")
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"Cidade não encontrada")
     else:
-        pass
+        cidade = city['cidade']
+        chave_cidade = list(cidade.keys())[0]
     return chave_cidade
 
 
@@ -403,8 +425,7 @@ def clear_entry():
 
 def simula_port_refin(token):
     # Essa função passa um dicionário codificado para o request
-    clear_entry()
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/proposta/operacoes-disponiveis"
     produto = "D"
     tipo_operacao = "003500"
@@ -426,7 +447,7 @@ def simula_port_refin(token):
         "convenio": convenio,
         "opcao_valor": opcao_valor,
         "valor_parcela": valor_parcela,
-        "prazo": prazo,
+        "prazo": "84",
         "cpf": cpf,
         "data_nascimento": data_nascimento,
         "prazo_restante": prazo_restante,
@@ -434,7 +455,6 @@ def simula_port_refin(token):
         "valor_parcela_original": valor_parcela_original,
         "prazo_original": prazo_original,
     }
-
 
     parametros_codificados = urlencode(parametros)
     connection = http.client.HTTPSConnection(url_homologacao)
@@ -449,9 +469,14 @@ def simula_port_refin(token):
     content = response.read().decode("utf-8")
     response_dict = json.loads(content)
     if response_dict['erro'] == True:
-        print(response_dict)
-        JanelaComConsole.adicionar_print(JanelaComConsole, f"Tabela Port:\n{response_dict['tabelas_portabilidade']}")
-        JanelaComConsole.adicionar_print(JanelaComConsole, f"Tabela Refin:\n{response_dict['tabelas_refin_portabilidade']}")
+        try:
+            JanelaComConsole.adicionar_print(JanelaComConsole, f"Tabela Port:\n{response_dict['tabelas_portabilidade'][0]['tabela']}")
+        except:
+            JanelaComConsole.adicionar_print(JanelaComConsole, "Sem tabela disponível para portabilidade")
+        try:
+            JanelaComConsole.adicionar_print(JanelaComConsole, f"Tabela Refin:\n{response_dict['tabelas_refin_portabilidade'][0]['tabela']}")
+        except:
+            JanelaComConsole.adicionar_print(JanelaComConsole, "Sem tabela disponível para refin da port")
     else:
         JanelaComConsole.adicionar_print(JanelaComConsole, "Sucesso na simulação")
     with open("simulacao.json", "w") as json_file:
@@ -462,7 +487,7 @@ def simula_port_refin(token):
 
 def grava_port(resultado_dict, token):
     # Essa função vai passar uma url no body com os dados retornados da função simula_port_refin
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/proposta/etapa1-simulador"
     cpf = cpf_entry.get()
     data_nascimento = bdate_entry.get()
@@ -498,14 +523,14 @@ def grava_port(resultado_dict, token):
         JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict}")
     else:
         #print(f"{response_dict['mensagem']}\nID Simulador = {response_dict['id_simulador']}")
-        JanelaComConsole.adicionar_print(JanelaComConsole,f"{response_dict['mensagem']}\nID Simulador = {response_dict['id_simulador']}")
+        JanelaComConsole.adicionar_print(JanelaComConsole,f"{response_dict['mensagem']}")
     connection.close()
     return response_dict
 
 
 def grava_refin(id_simulador, resultado_dict, token):
     # Essa função vai passar uma url no body com os dados do refin e salvar no id_simulador da função grava_port
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/proposta/etapa1-refin-portabilidade"
     banco_compra = banco_origem_entry.get()
     contrato_compra = contrato_entry.get()
@@ -547,7 +572,7 @@ def grava_refin(id_simulador, resultado_dict, token):
 def dados_pessoais(id_simulador, token):
     # Essa função vai passar uma url no body com os dados do cliente e salvar no id_simulador da função grava_port
     # Que já possui os dados do refin da função grava_refin
-    url_homologacao = "webservice-homol.facta.com.br"
+    url_homologacao = "webservice.facta.com.br"
     path = "/proposta/etapa2-dados-pessoais"
     cpf = cpf_entry.get()
     nome = name_entry.get()
@@ -615,7 +640,52 @@ def dados_pessoais(id_simulador, token):
         JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict}")
     else:
         # print(f"{response_dict['mensagem']}\nCódigo cliente = {response_dict['codigo_cliente']}")
-        JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict['mensagem']}\nCódigo cliente = {response_dict['codigo_cliente']}")
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict['mensagem']}")
+    connection.close()
+    return response_dict
+
+
+def cadastro_proposta(token, codigo_cliente, id_simulador):
+    # Essa função vai passar uma url no body com o código do cliente gerado pela função dados_pessoais
+    # E tbm os dados da proposta através do id vinculado
+    # https://webservice.facta.com.br/proposta/etapa3-proposta-cadastro
+    url_homologacao = "webservice.facta.com.br"
+    path = "/proposta/etapa3-proposta-cadastro"
+    body = f"codigo_cliente={codigo_cliente}&id_simulador={id_simulador}"
+
+    connection = http.client.HTTPSConnection(url_homologacao)
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+
+    connection.request("POST", path, body, headers)
+    response = connection.getresponse()
+    content = response.read().decode("utf-8")
+    response_dict = json.loads(content)
+    connection.close()
+    return response_dict
+
+
+def envio_link(token, codigo_af):
+    # Essa função vai passar uma url no body com o codigo af gerado pelo cadastro proposta e o tipo de envio
+    url_homologacao = "webservice.facta.com.br"
+    path = "/proposta/envio-link"
+    body = (
+        f"codigo_af={codigo_af}&tipo_envio=whatsapp"
+    )
+
+    connection = http.client.HTTPSConnection(url_homologacao)
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": " PHPSESSID=cup7bgnk6ou2nppmvlh5hlf20o",
+    }
+
+    connection.request("POST", path, body, headers)
+    response = connection.getresponse()
+    content = response.read().decode("utf-8")
+    response_dict = json.loads(content)
     connection.close()
     return response_dict
 
@@ -627,16 +697,13 @@ def digitar_port(token_gerado):
     grava_refin(id_simulador, resultado_dict, token_gerado)
     cadastro_cliente = dados_pessoais(id_simulador, token_gerado)
     codigo_cliente = cadastro_cliente["codigo_cliente"]
-    #proposta = cadastro_proposta(token_gerado, codigo_cliente, id_simulador)
-    #try:
-    #    envio_link(token_gerado, proposta['codigo'])
-    #    envio_link(token_gerado, proposta['codigo_refin_port'])
-    #except:
-    #    JanelaComConsole.adicionar_print(JanelaComConsole, "Falha ao enviar o link")    
-    #JanelaComConsole.adicionar_print(JanelaComConsole, f"{proposta['mensagem']}\nAF Port: {proposta['codigo']}\nAF Refin: {proposta['codigo_refin_port']}\n{proposta['url_formalizacao']}\n")
-    # print(f"{proposta['mensagem']}\nADE Port: {proposta['codigo']}\nADE Refin: {proposta['codigo_refin_port']}\n{proposta['url_formalizacao']}\n")
-
-
+    proposta = cadastro_proposta(token_gerado, codigo_cliente, id_simulador)
+    try:
+        envio_link(token_gerado, proposta['codigo'])
+        envio_link(token_gerado, proposta['codigo_refin_port'])
+    except:
+        JanelaComConsole.adicionar_print(JanelaComConsole, "Falha ao enviar o link, proposta cancelada no crivo")
+    JanelaComConsole.adicionar_print(JanelaComConsole, f"{proposta['mensagem']}\nAF Port: {proposta['codigo']}\nAF Refin: {proposta['codigo_refin_port']}\n{proposta['url_formalizacao']}\n")
 
 
 if __name__ == "__main__":
@@ -646,7 +713,5 @@ if __name__ == "__main__":
     #JanelaComConsole.adicionar_print(JanelaComConsole, f"{token_gerado[0:20]}")
 
     root.protocol("WM_DELETE_WINDOW", app.restaurar_print_original)
+    JanelaComConsole.centralizar_janela(root)
     root.mainloop()
-
-
-print(name_entry.get())
