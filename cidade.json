@@ -1,4 +1,9 @@
 {
-  "erro": true,
-  "mensagem": "Nenhuma cidade"
+  "erro": false,
+  "cidade": {
+    "584": {
+      "nome": "BELEM",
+      "estado": "PA"
+    }
+  }
 }

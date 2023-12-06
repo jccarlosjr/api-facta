@@ -205,12 +205,12 @@ class JanelaComConsole:
 
 
 def gerar_token():
-    #Alterar a url de homologacao para produção depois de finalizado
+    # Alterar a url de homologacao para produção depois de finalizado
     url_homologacao = "webservice-homol.facta.com.br"
     path = "/gera-token"
-    #Código do usuário master
+    # Código do usuário master
     usuario = "93862"
-    #Senha gerada pelo operador da api do facta
+    # Senha gerada pelo operador da api do facta
     senha = "3rpl7ds11psjo3cloae6"
     credenciais = f"{usuario}:{senha}"
     credenciais_base64 = base64.b64encode(credenciais.encode()).decode('utf-8')
@@ -237,6 +237,7 @@ def gerar_token():
 
 token_gerado = gerar_token()
 
+
 def remove_special_char(name):
     text = re.sub(r'[^a-zA-Z\s]', '', name)
     return text
@@ -255,6 +256,7 @@ def agency_4char(cod):
 
 
 def obter_cidade(token, uf=str, nome=str):
+    # Função para buscar o código da cidade na api
     uf = uf.upper()
     nome = nome.upper()
     nome = nome.replace("Ã", "A").replace("À", "A").replace("Á", "A").replace("Â", "A")
@@ -291,6 +293,8 @@ def obter_cidade(token, uf=str, nome=str):
 
 
 def select_file_facta():
+    # A função vai importar o excel e preencher automaticamente os campos entry na gui
+    # Ao mesmo tempom que vai formatar adequadamente para os padrões aceito pela api
     arquivo_path = filedialog.askopenfilename(
         title="Selecione um arquivo", filetypes=[("Arquivos Excel", "*.xlsx;*.xls")])
     if arquivo_path:
@@ -364,6 +368,7 @@ def select_file_facta():
 
 
 def clear_entry():
+    # Função para limpar o dataframe e as entry da gui
     base = None
     name_entry.delete(0, tk.END)
     cpf_entry.delete(0, tk.END)
@@ -397,7 +402,8 @@ def clear_entry():
 
 
 def simula_port_refin(token):
-    # Essa função passa um dicionário codificado para o request 
+    # Essa função passa um dicionário codificado para o request
+    clear_entry()
     url_homologacao = "webservice-homol.facta.com.br"
     path = "/proposta/operacoes-disponiveis"
     produto = "D"
@@ -612,7 +618,6 @@ def dados_pessoais(id_simulador, token):
         JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict['mensagem']}\nCódigo cliente = {response_dict['codigo_cliente']}")
     connection.close()
     return response_dict
-
 
 
 def digitar_port(token_gerado):
