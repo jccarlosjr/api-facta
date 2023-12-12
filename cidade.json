@@ -1,8 +1,12 @@
 {
   "erro": false,
   "cidade": {
-    "25775": {
-      "nome": "TAQUARITINGA",
+    "970688": {
+      "nome": "SAO JOSE DOS CAMPOS",
+      "estado": "SP"
+    },
+    "7117594": {
+      "nome": "SAO JOSE DOS CAMPOS",
       "estado": "SP"
     }
   }

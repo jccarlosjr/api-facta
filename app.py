@@ -323,6 +323,7 @@ def select_file_facta():
         title="Selecione um arquivo", filetypes=[("Arquivos Excel", "*.xlsx;*.xls")])
     if arquivo_path:
         nome_arquivo = os.path.basename(arquivo_path)
+        nome_arquivo = f'{nome_arquivo[6:11]}/{nome_arquivo[12:14]}/{nome_arquivo[15:]}'
         JanelaComConsole.adicionar_print(JanelaComConsole, f"Arquivo selecionado: {nome_arquivo}")
         global base
         base = pd.read_excel(arquivo_path)
