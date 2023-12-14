@@ -1,13 +1,9 @@
 {
   "erro": false,
   "cidade": {
-    "970688": {
-      "nome": "SAO JOSE DOS CAMPOS",
-      "estado": "SP"
-    },
-    "7117594": {
-      "nome": "SAO JOSE DOS CAMPOS",
-      "estado": "SP"
+    "584": {
+      "nome": "BELEM",
+      "estado": "PA"
     }
   }
 }

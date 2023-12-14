@@ -2,19 +2,19 @@
   "erro": false,
   "tabelas_portabilidade": [
     {
-      "tabela": "45055 - INSS CIP Flex 3 PN-S",
-      "codigoTabela": 106439,
+      "tabela": "45039 - INSS CIP Flex 1 PN-S",
+      "codigoTabela": 106437,
       "convenio": "FACTA FINANCEIRA",
       "idConvenio": 3,
       "tipoOperacao": "PORTABILIDADE DIGITAL",
       "idTipoOperacao": 17,
       "averbador": "INSS",
       "idAverbador": 3,
-      "taxa": 1.6,
-      "prazo": 50,
-      "coeficiente": 0.02976,
-      "contrato": 5054.93,
-      "parcela": 150.43,
+      "taxa": 1.8,
+      "prazo": 58,
+      "coeficiente": 0.0285,
+      "contrato": 6995,
+      "parcela": 199.36,
       "carencia": "08/01/2024"
     }
   ],
@@ -30,10 +30,10 @@
       "idAverbador": 3,
       "taxa": 1.7,
       "prazo": 84,
-      "coeficiente": 0.0260579,
-      "contrato": 5978.17,
-      "parcela": 152.59,
-      "valor_liquido": 923.24,
+      "coeficiente": 0.0260282,
+      "contrato": 7866.14,
+      "parcela": 200,
+      "valor_liquido": 871.14,
       "carencia": "08/01/2024"
     },
     {
@@ -47,10 +47,10 @@
       "idAverbador": 3,
       "taxa": 1.6,
       "prazo": 84,
-      "coeficiente": 0.02565136,
-      "contrato": 6068.27,
-      "parcela": 152.59,
-      "valor_liquido": 1013.34,
+      "coeficiente": 0.02562336,
+      "contrato": 7984.24,
+      "parcela": 200,
+      "valor_liquido": 989.24,
       "carencia": "08/01/2024"
     },
     {
@@ -64,10 +64,10 @@
       "idAverbador": 3,
       "taxa": 1.55,
       "prazo": 84,
-      "coeficiente": 0.0252168,
-      "contrato": 6166.66,
-      "parcela": 152.59,
-      "valor_liquido": 1111.73,
+      "coeficiente": 0.02518992,
+      "contrato": 8113.54,
+      "parcela": 200,
+      "valor_liquido": 1118.54,
       "carencia": "08/01/2024"
     },
     {
@@ -81,10 +81,10 @@
       "idAverbador": 3,
       "taxa": 1.5,
       "prazo": 84,
-      "coeficiente": 0.02478672,
-      "contrato": 6268.71,
-      "parcela": 152.59,
-      "valor_liquido": 1213.78,
+      "coeficiente": 0.02476096,
+      "contrato": 8247.65,
+      "parcela": 200,
+      "valor_liquido": 1252.65,
       "carencia": "08/01/2024"
     },
     {
@@ -98,10 +98,10 @@
       "idAverbador": 3,
       "taxa": 1.45,
       "prazo": 84,
-      "coeficiente": 0.02436,
-      "contrato": 6373.58,
-      "parcela": 152.59,
-      "valor_liquido": 1318.65,
+      "coeficiente": 0.02433536,
+      "contrato": 8383.81,
+      "parcela": 200,
+      "valor_liquido": 1388.81,
       "carencia": "08/01/2024"
     }
   ]
