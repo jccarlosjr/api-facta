@@ -348,8 +348,8 @@ def select_file_facta():
         cidade_endereco = str(base['CIDADE'].values[0]).upper()
         bairro = str(base['BAIRRO'].values[0]).upper()
         especie = str(base['ESPECIE'].values[0])
-        matricula = str(base['MATRICULA'].values[0]).replace("-", "").replace(".", "")
-        salario = str(base['SALARIO'].values[0]).replace(".", "").replace(",", ".").replace("R", "").replace("$", "").strip()
+        matricula = str(base['MATRICULA'].values[0]).replace("-", "").replace(".", "").replace("[", "").replace("]", "").replace("'", "").strip()
+        salario = str(base['SALARIO'].values[0]).replace(".", "").replace(",", ".").replace("R", "").replace("$", "").replace("[", "").replace("]", "").replace("'", "").strip()
         uf_nb = str(base['UF_NB'].values[0]).upper()
         banco = bank_3char(str(base['BANCO_NB'].values[0]))
         agencia = agency_4char(str(base['AGENCIA_NB'].values[0]))
@@ -713,6 +713,10 @@ def digitar_port(token_gerado):
 if __name__ == "__main__":
     root = tk.Tk()
     app = JanelaComConsole(root)
+    caminho_icone = "favicon.ico"
+
+    # Definir o ícone da janela
+    root.iconbitmap(caminho_icone)
 
     app.adicionar_print(f"{token_gerado[0:20]}")
 
