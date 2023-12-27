@@ -6,7 +6,7 @@ import http.client, base64, json, sys, os, re, tkinter as tk, pandas as pd
 class JanelaComConsole:
     def __init__(self, root):
         self.root = root
-        self.root.title("Digitação Facta")
+        self.root.title("Facta")
 
         # Criar um widget Text para o console
         self.console = scrolledtext.ScrolledText(root, wrap="none", width=40, height=10)
@@ -666,9 +666,17 @@ def cadastro_proposta(token, codigo_cliente, id_simulador):
     connection.request("POST", path, body, headers)
     response = connection.getresponse()
     content = response.read().decode("utf-8")
-    response_dict = json.loads(content)
-    connection.close()
-    return response_dict
+
+    json_start_index = content.find('{"erro":')
+
+    if json_start_index != -1:
+        json_content = content[json_start_index:]
+        response_dict = json.loads(json_content)
+        JanelaComConsole.adicionar_print(JanelaComConsole, f'Response Dict: {response_dict}')
+        return response_dict
+    else:
+        JanelaComConsole.adicionar_print(JanelaComConsole, 'A resposta não contém um JSON válido.')
+        return None
 
 
 def envio_link(token, codigo_af):
@@ -676,7 +684,7 @@ def envio_link(token, codigo_af):
     url_homologacao = "webservice.facta.com.br"
     path = "/proposta/envio-link"
     body = (
-        f"codigo_af={codigo_af}&tipo_envio=whatsapp"
+        f"codigo_af={codigo_af}&tipo_envio=sms"
     )
 
     connection = http.client.HTTPSConnection(url_homologacao)
@@ -713,7 +721,8 @@ def digitar_port(token_gerado):
 if __name__ == "__main__":
     root = tk.Tk()
     app = JanelaComConsole(root)
-
+    caminho_icone = "favicon.ico"
+    root.iconbitmap(caminho_icone)
     app.adicionar_print(f"{token_gerado[0:20]}")
 
     root.protocol("WM_DELETE_WINDOW", app.restaurar_print_original)
