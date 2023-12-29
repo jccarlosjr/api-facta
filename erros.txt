@@ -1,0 +1,37 @@
+API DE DIGITAÇÃO FACTA
+
+ERROS CONHECIDOS:
+TELEFONE EM FORMATO INVÁLIDO (012) 91234-5678
+MATRÍCULA COM 0 À ESQUERDA:
+erro: o tipo recebido pela matrícula é uma string, mas a api converte em inteiro, gerando um erro na in100 e consequentemente impedindo a digitação
+resolução: converter em inteiro antes de converter em string
+
+ESPÉCIE:
+erro: ocasionalmente, quando falha a consulta in100 a api retorna erro no tipo_beneficio
+resolução: tentar digitar novamente
+
+CIDADE NATURAL/CIDADE END COM ESPAÇO NO FINAL
+erro: o tipo recebido é uma string com os espaços substituídos por underlines ( _ )
+quando uma string é passada com espaço no final ele ficaria algo como RIO_DE_JANEIRO_
+consequentemente gerando um erro ao enviar a string pro cabeçalho da requisição
+resolução: manual
+
+BANCO ORIGINADOR:
+erro: o fata interpreta alguns bancos à sua maneira, a exemplo do c6
+digitar 626 não vai funcionar, é preciso alterar para 336, essas peculiaridades precisam ter entedimento do sistema web do banco para correção manual
+
+BANCO DE DADOS:
+erro: o banco de dados da api constantemente cai
+resolução: aguardar 5 min antes de dar um novo get ou post
+
+CEP:
+erro: o cep informado deve existir na base de dados dos correios
+resolução: manual
+
+Nª DA CASA:
+erro: o valor SN não é aceito, é necessário passar um inteiro diferente de 0
+resolução: substituir valores NaN por 1
+
+VALORES FINANCEIROS:
+erro: a api não aceita o formato pt-br de valores, somente os fomarto americano para valores
+resolução: converter para string e usar replace para mudar , por .
