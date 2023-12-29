@@ -11,10 +11,10 @@
       "averbador": "INSS",
       "idAverbador": 3,
       "taxa": 1.6,
-      "prazo": 50,
-      "coeficiente": 0.02976,
-      "contrato": 5054.93,
-      "parcela": 150.43,
+      "prazo": 42,
+      "coeficiente": 0.033587,
+      "contrato": 9069,
+      "parcela": 304.6,
       "carencia": "08/01/2024"
     }
   ],
@@ -30,10 +30,10 @@
       "idAverbador": 3,
       "taxa": 1.7,
       "prazo": 84,
-      "coeficiente": 0.0260579,
-      "contrato": 5978.17,
-      "parcela": 152.59,
-      "valor_liquido": 923.24,
+      "coeficiente": 0.0261492,
+      "contrato": 12031.78,
+      "parcela": 310,
+      "valor_liquido": 2962.78,
       "carencia": "08/01/2024"
     },
     {
@@ -47,10 +47,10 @@
       "idAverbador": 3,
       "taxa": 1.6,
       "prazo": 84,
-      "coeficiente": 0.02565136,
-      "contrato": 6068.27,
-      "parcela": 152.59,
-      "valor_liquido": 1013.34,
+      "coeficiente": 0.02573648,
+      "contrato": 12215.22,
+      "parcela": 310,
+      "valor_liquido": 3146.22,
       "carencia": "08/01/2024"
     },
     {
@@ -64,10 +64,10 @@
       "idAverbador": 3,
       "taxa": 1.55,
       "prazo": 84,
-      "coeficiente": 0.0252168,
-      "contrato": 6166.66,
-      "parcela": 152.59,
-      "valor_liquido": 1111.73,
+      "coeficiente": 0.02529744,
+      "contrato": 12419.85,
+      "parcela": 310,
+      "valor_liquido": 3350.85,
       "carencia": "08/01/2024"
     },
     {
@@ -81,10 +81,10 @@
       "idAverbador": 3,
       "taxa": 1.5,
       "prazo": 84,
-      "coeficiente": 0.02478672,
-      "contrato": 6268.71,
-      "parcela": 152.59,
-      "valor_liquido": 1213.78,
+      "coeficiente": 0.02486288,
+      "contrato": 12626.68,
+      "parcela": 310,
+      "valor_liquido": 3557.68,
       "carencia": "08/01/2024"
     },
     {
@@ -98,10 +98,10 @@
       "idAverbador": 3,
       "taxa": 1.45,
       "prazo": 84,
-      "coeficiente": 0.02436,
-      "contrato": 6373.58,
-      "parcela": 152.59,
-      "valor_liquido": 1318.65,
+      "coeficiente": 0.0244328,
+      "contrato": 12838.74,
+      "parcela": 310,
+      "valor_liquido": 3769.74,
       "carencia": "08/01/2024"
     }
   ]
