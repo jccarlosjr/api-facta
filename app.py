@@ -1,13 +1,6 @@
+import http.client, base64, json, sys, os, re, pandas as pd, tkinter as tk
 from tkinter import ttk, filedialog, scrolledtext
 from urllib.parse import urlencode
-import http.client
-import base64
-import json
-import sys
-import os
-import re
-import tkinter as tk
-import pandas as pd
 
 
 class JanelaComConsole:
@@ -254,18 +247,20 @@ class JanelaComConsole:
 
         root.geometry(f"+{x_pos}+{y_pos}")
 
+URL_PRODUCAO = "webservice.facta.com.br"
+URL_HOMOLOGACAO = "webservice-homol.facta.com.br"
 
 def gerar_token():
     # Alterar a url de homologacao para produção depois de finalizado
-    url_homologacao = "webservice.facta.com.br"
+    url = URL_PRODUCAO
     path = "/gera-token"
-    # Código do usuário master
+    # Preencher com o usuário master
     usuario = "93862"
-    # Senha gerada pelo operador da api do facta
+    # Senha gerada pela equipe de TI do facta
     senha = "3rpl7ds11psjo3cloae6"
     credenciais = f"{usuario}:{senha}"
     credenciais_base64 = base64.b64encode(credenciais.encode()).decode('utf-8')
-    connection = http.client.HTTPSConnection(url_homologacao)
+    connection = http.client.HTTPSConnection(url)
     headers = {
         "Authorization": f"Basic {credenciais_base64}",
         "Content-Type": "application/json",
@@ -296,18 +291,6 @@ def remove_special_char(name):
     return text
 
 
-def bank_3char(cod):
-    if len(cod) < 3:
-        cod = cod.zfill(3)
-    return cod
-
-
-def agency_4char(cod):
-    if len(cod) < 4:
-        cod = cod.zfill(4)
-    return cod
-
-
 def obter_cidade(token, uf=str, nome=str):
     # Função para buscar o código da cidade na api
     uf = uf.upper()
@@ -322,7 +305,7 @@ def obter_cidade(token, uf=str, nome=str):
     nome = nome.replace("Ç", "C")
     nome = nome.replace(" ", "_").strip()
 
-    url = "webservice.facta.com.br"
+    url = URL_PRODUCAO
     endpoint = f"/proposta-combos/cidade?estado={uf}&nome_cidade={nome}"
 
     headers = {
@@ -388,15 +371,15 @@ def select_file_facta():
         salario = str(base['SALARIO'].values[0]).replace(".", "").replace(",", ".").replace(
             "R", "").replace("$", "").replace("[", "").replace("]", "").replace("'", "").strip()
         uf_nb = str(base['UF_NB'].values[0]).upper()
-        banco = bank_3char(str(base['BANCO_NB'].values[0]))
-        agencia = agency_4char(str(base['AGENCIA_NB'].values[0]))
+        banco = str(base['BANCO_NB'].values[0])
+        agencia = str(base['AGENCIA_NB'].values[0])
         conta = str(base['CONTA_NB'].values[0]) + str(base['DV_NB'].values[0])
         banco_port = str(base['BANCO_PORT'].values[0])
         if banco_port == "626":
             banco_port = "336"
         contrato_port = str(base['NUM_CONTRATO'].values[0]).replace(
             "-", "").replace("/", "").replace("_", "")
-        parcela_total = bank_3char(str(base['NUM_PARCELA_TOTAL'].values[0])).replace(
+        parcela_total = str(base['NUM_PARCELA_TOTAL'].values[0]).replace(
             "[", "").replace("]", "").replace("'", "")
         parcela_restante = str(base['PAR_RESTANTE'].values[0])
         parcela = str(base['PARCELA'].values[0]).replace(
@@ -474,7 +457,7 @@ def clear_entry():
 def simula_port_refin(token):
     # Essa função passa um dicionário codificado para o request
     # O retorno é um código de simulação necessário para digitar a proposta
-    url_homologacao = "webservice.facta.com.br"
+    url = URL_PRODUCAO
     path = "/proposta/operacoes-disponiveis"
     produto = "D"
     tipo_operacao = "003500"
@@ -505,7 +488,7 @@ def simula_port_refin(token):
     }
 
     parametros_codificados = urlencode(parametros)
-    connection = http.client.HTTPSConnection(url_homologacao)
+    connection = http.client.HTTPSConnection(url)
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -542,7 +525,7 @@ def simula_port_refin(token):
 def grava_port(resultado_dict, token):
     # Essa função vai passar uma url no body com os dados retornados da função simula_port_refin
     # O retorno é o código da simulação, selecionando a primeira tabela disponibilizada pela simulação
-    url_homologacao = "webservice.facta.com.br"
+    url = URL_PRODUCAO
     path = "/proposta/etapa1-simulador"
     cpf = cpf_entry.get()
     data_nascimento = bdate_entry.get()
@@ -562,7 +545,7 @@ def grava_port(resultado_dict, token):
         f"&codigo_tabela={codigo_tabela}&prazo_original={prazo_original}"
     )
 
-    connection = http.client.HTTPSConnection(url_homologacao)
+    connection = http.client.HTTPSConnection(url)
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -585,7 +568,7 @@ def grava_port(resultado_dict, token):
 def grava_refin(id_simulador, resultado_dict, token):
     # Essa função vai passar uma url no body com os dados do refin e salvar no id_simulador da função grava_port
     # O retorno é o código da simulação, adicionando os dados da portabilidade ao código da simulação
-    url_homologacao = "webservice.facta.com.br"
+    url = URL_PRODUCAO
     path = "/proposta/etapa1-refin-portabilidade"
     banco_compra = banco_origem_entry.get()
     contrato_compra = contrato_entry.get()
@@ -602,7 +585,7 @@ def grava_refin(id_simulador, resultado_dict, token):
         f"&codigo_tabela={codigo_tabela}&coeficiente={coeficiente}&valor_operacao={valor_operacao}&valor_parcela={valor_parcela}"
     )
 
-    connection = http.client.HTTPSConnection(url_homologacao)
+    connection = http.client.HTTPSConnection(url)
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -629,7 +612,7 @@ def dados_pessoais(id_simulador, token):
     # Essa função vai passar uma url no body com os dados do cliente e salvar no id_simulador da função grava_port
     # Que já possui os dados do refin da função grava_refin
     # O retorno é o código do cliente com os dados pessoais
-    url_homologacao = "webservice.facta.com.br"
+    url = URL_PRODUCAO
     path = "/proposta/etapa2-dados-pessoais"
     cpf = cpf_entry.get()
     nome = name_entry.get()
@@ -669,7 +652,7 @@ def dados_pessoais(id_simulador, token):
     agencia_pagamento = agencia_entry.get()
     conta_pagamento = conta_entry.get()
 
-    connection = http.client.HTTPSConnection(url_homologacao)
+    connection = http.client.HTTPSConnection(url)
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -704,11 +687,11 @@ def dados_pessoais(id_simulador, token):
 def cadastro_proposta(token, codigo_cliente, id_simulador):
     # Essa função vai passar uma url no body com o código do cliente gerado pela função dados_pessoais
     # E tbm os dados da proposta através do id vinculado
-    url_homologacao = "webservice.facta.com.br"
+    url = URL_PRODUCAO
     path = "/proposta/etapa3-proposta-cadastro"
     body = f"codigo_cliente={codigo_cliente}&id_simulador={id_simulador}"
 
-    connection = http.client.HTTPSConnection(url_homologacao)
+    connection = http.client.HTTPSConnection(url)
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -734,13 +717,13 @@ def cadastro_proposta(token, codigo_cliente, id_simulador):
 
 def envio_link(token, codigo_af):
     # Essa função vai passar uma url no body com o codigo af gerado pelo cadastro proposta e o tipo de envio
-    url_homologacao = "webservice.facta.com.br"
+    url = URL_PRODUCAO
     path = "/proposta/envio-link"
     body = (
         f"codigo_af={codigo_af}&tipo_envio=sms"
     )
 
-    connection = http.client.HTTPSConnection(url_homologacao)
+    connection = http.client.HTTPSConnection(url)
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/x-www-form-urlencoded",
