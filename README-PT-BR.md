@@ -8,7 +8,7 @@ Estas instruções fornecerão uma cópia do projeto em funcionamento em sua má
 
 ### 📋 Pré-requisitos
 
-A única biblioteca a ser instalada é o pandas, para leitura dos arquivos em excel
+As únicas bibliotecas a serem instaladas são o pandas, para leitura dos arquivos em excel e pyinstaller para criação do executável
 
 ### 🔧 Instalação
 
@@ -31,11 +31,17 @@ Para criação do executável, realizar os seguintes passos:
 1 - Executar no terminal: pyinstaller --icon=favicon.ico --onefile  app.py
 2 - Garantir que os arquivos "favicon.ico" e "facta.png" estejam no mesmo diretório do executável
 
+
 ## 🛠️ Construído com
 
 * [Pandas](https://pandas.pydata.org/)
 * [Tkinter](https://docs.python.org/pt-br/3/library/tkinter.html)
 * [Pyinstaller](https://pyinstaller.org/en/stable/)
+
+
+## 📄 Bugs e erros
+
+Os erros conhecidos que são retornados pela API, estão no arquivo erros.txt
 
 ## 📄 Licença
 
