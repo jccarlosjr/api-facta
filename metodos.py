@@ -19,19 +19,19 @@ def obter_estado_civil(token):
     response = conn.getresponse()
     estado_civil_data = json.loads(response.read().decode("utf-8"))
     conn.close()
-    #retorna um dicionário com  outro dicionário dentro chamado estado_civil
-    #para acessar o valor de solteiro = id_estado_civil['estado_civil']['4']
-    # {'erro': False, 'estado_civil': 
-    # {'3': 'CASADO', 
-    # '7': 'DESQUITADO', 
-    # '2': 'DIVORCIADO', 
-    # '8': 'NAO CADASTRADO', 
-    # '9999': 'NAO DEFINIDO', 
-    # '6': 'OUTROS', 
-    # '1': 'SEPARADO', 
-    # '4': 'SOLTEIRO', 
-    # '9': 'UNIÃO ESTÁVEL', 
-    # '5': 'VIUVO'}}
+    # retorna um dicionário com  outro dicionário dentro chamado estado_civil
+    # para acessar o valor de solteiro = id_estado_civil['estado_civil']['4']
+    #  {'erro': False, 'estado_civil': 
+    #  {'3': 'CASADO', 
+    #  '7': 'DESQUITADO', 
+    #  '2': 'DIVORCIADO', 
+    #  '8': 'NAO CADASTRADO', 
+    #  '9999': 'NAO DEFINIDO', 
+    #  '6': 'OUTROS', 
+    #  '1': 'SEPARADO', 
+    #  '4': 'SOLTEIRO', 
+    #  '9': 'UNIÃO ESTÁVEL', 
+    #  '5': 'VIUVO'}}
     return estado_civil_data
 
 
