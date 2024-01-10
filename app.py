@@ -255,9 +255,9 @@ def gerar_token():
     url = URL_PRODUCAO
     path = "/gera-token"
     # Preencher com o usuário master
-    usuario = "93862"
+    usuario = ""
     # Senha gerada pela equipe de TI do facta
-    senha = "3rpl7ds11psjo3cloae6"
+    senha = ""
     credenciais = f"{usuario}:{senha}"
     credenciais_base64 = base64.b64encode(credenciais.encode()).decode('utf-8')
     connection = http.client.HTTPSConnection(url)
