@@ -247,8 +247,10 @@ class JanelaComConsole:
 
         root.geometry(f"+{x_pos}+{y_pos}")
 
+
 URL_PRODUCAO = "webservice.facta.com.br"
 URL_HOMOLOGACAO = "webservice-homol.facta.com.br"
+
 
 def gerar_token():
     # Alterar a url de homologacao para produção depois de finalizado
