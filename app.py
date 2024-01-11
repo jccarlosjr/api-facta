@@ -11,9 +11,10 @@ class JanelaComConsole:
         self.console = scrolledtext.ScrolledText(
             root, wrap="none", width=40, height=10)
         self.console.grid(row=16, column=0, columnspan=5, sticky="nsew")
-        self.console.tag_configure("center", justify="center", font=nova_fonte)
 
         nova_fonte = ("Sans Serif", 9, "bold")
+        self.console.tag_configure("center", justify="center", font=nova_fonte)
+
 
         self.stdout_original = sys.stdout
         sys.stdout = self.ConsoleRedirector(self.console)
