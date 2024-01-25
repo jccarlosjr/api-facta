@@ -254,13 +254,10 @@ URL_HOMOLOGACAO = "webservice-homol.facta.com.br"
 
 
 def gerar_token():
-    # Alterar a url de homologacao para produção depois de finalizado
     url = URL_PRODUCAO
     path = "/gera-token"
-    # Preencher com o usuário master
-    usuario = ""
-    # Senha gerada pela equipe de TI do facta
-    senha = ""
+    usuario = "93862"
+    senha = "3rpl7ds11psjo3cloae6"
     credenciais = f"{usuario}:{senha}"
     credenciais_base64 = base64.b64encode(credenciais.encode()).decode('utf-8')
     connection = http.client.HTTPSConnection(url)
@@ -743,8 +740,8 @@ def envio_link(token, codigo_af):
 
 def digitar_port(token_gerado):
     simula_port = simula_port_refin(token_gerado)
-    grava_port = grava_port(simula_port, token_gerado)
-    id_simulador = grava_port["id_simulador"]
+    gravar_port = grava_port(simula_port, token_gerado)
+    id_simulador = gravar_port["id_simulador"]
     grava_refin(id_simulador, simula_port, token_gerado)
     cadastro_cliente = dados_pessoais(id_simulador, token_gerado)
     codigo_cliente = cadastro_cliente["codigo_cliente"]
