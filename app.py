@@ -272,10 +272,6 @@ def gerar_token():
     connection.close()
     if response_json["erro"] is False:
         token = response_json["token"]
-        expire = response_json["expira"]
-        JanelaComConsole.adicionar_print(
-            JanelaComConsole, f'Expira em: {expire}')
-        print()
         return token
     else:
         JanelaComConsole.adicionar_print(
@@ -293,6 +289,8 @@ def remove_special_char(name):
 
 def obter_cidade(token, uf=str, nome=str):
     # Função para buscar o código da cidade na api
+    if nome[-1] == " ":
+        nome[-1] = ""
     uf = uf.upper()
     nome = nome.upper()
     nome = nome.replace("Ã", "A").replace(
@@ -503,19 +501,18 @@ def simula_port_refin(token):
     if response_dict['erro'] == True:
         try:
             JanelaComConsole.adicionar_print(
-                JanelaComConsole, f"Tabela Port:\n{response_dict['tabelas_portabilidade'][0]['tabela']}")
+                JanelaComConsole, f"Tabela Port: {response_dict['tabelas_portabilidade'][0]['tabela']}")
         except:
             JanelaComConsole.adicionar_print(
                 JanelaComConsole, "Sem tabela disponível para portabilidade")
         try:
             JanelaComConsole.adicionar_print(
-                JanelaComConsole, f"Tabela Refin:\n{response_dict['tabelas_refin_portabilidade'][0]['tabela']}")
+                JanelaComConsole, f"Tabela Refin: {response_dict['tabelas_refin_portabilidade'][0]['tabela']}")
         except:
             JanelaComConsole.adicionar_print(
                 JanelaComConsole, "Sem tabela disponível para refin da port")
     else:
-        JanelaComConsole.adicionar_print(
-            JanelaComConsole, "Sucesso na simulação")
+        pass
     with open("simulacao.json", "w") as json_file:
         json.dump(response_dict, json_file, indent=2)
     connection.close()
@@ -557,10 +554,9 @@ def grava_port(resultado_dict, token):
     content = response.read().decode("utf-8")
     response_dict = json.loads(content)
     if response_dict['erro'] == True:
-        JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict}")
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict['mensagem']}")
     else:
-        JanelaComConsole.adicionar_print(
-            JanelaComConsole, f"{response_dict['mensagem']}")
+        pass
     connection.close()
     return response_dict
 
@@ -598,12 +594,11 @@ def grava_refin(id_simulador, resultado_dict, token):
     response_dict = json.loads(content)
     if response_dict['erro'] == True:
         # print(response_dict)
-        JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict}")
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict['mensagem']}")
 
     else:
         # print(f"{response_dict['mensagem']}")
-        JanelaComConsole.adicionar_print(
-            JanelaComConsole, f"{response_dict['mensagem']}")
+        pass
     connection.close()
     return response_dict
 
@@ -651,6 +646,7 @@ def dados_pessoais(id_simulador, token):
     banco_pagamento = banco_entry.get()
     agencia_pagamento = agencia_entry.get()
     conta_pagamento = conta_entry.get()
+    tipo_conta = "C"
 
     connection = http.client.HTTPSConnection(url)
     headers = {
@@ -668,7 +664,7 @@ def dados_pessoais(id_simulador, token):
         f"&nome_mae={nome_mae}&nome_pai={nome_pai}&valor_patrimonio={valor_patrimonio}"
         f"&cliente_iletrado_impossibilitado={cliente_iletrado_impossibilitado}&banco={banco}&agencia={agencia}"
         f"&conta={conta}&matricula={matricula}&tipo_credito_nb={tipo_credito_nb}&tipo_beneficio={tipo_beneficio}"
-        f"&estado_beneficio={estado_beneficio}&banco_pagamento={banco_pagamento}&agencia_pagamento={agencia_pagamento}&conta_pagamento={conta_pagamento}"
+        f"&estado_beneficio={estado_beneficio}&banco_pagamento={banco_pagamento}&agencia_pagamento={agencia_pagamento}&conta_pagamento={conta_pagamento}&tipo_conta={tipo_conta}"
     )
 
     connection.request("POST", path, body, headers)
@@ -676,7 +672,7 @@ def dados_pessoais(id_simulador, token):
     content = response.read().decode("utf-8")
     response_dict = json.loads(content)
     if response_dict['erro'] == True:
-        JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict}")
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict['mensagem']}")
     else:
         JanelaComConsole.adicionar_print(
             JanelaComConsole, f"{response_dict['mensagem']}")
