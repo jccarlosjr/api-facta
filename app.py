@@ -24,13 +24,17 @@ class JanelaComConsole:
 
         parcela_confirma = ttk.Button(
             root, text="Select", style='Estilo.TButton', command=lambda: select_file_facta())
-        parcela_confirma.grid(row=0, column=1, pady=5)
+        parcela_confirma.grid(row=0, column=0, pady=5)
 
         style_btt = ttk.Style()
         style_btt.configure('Estilo.TButton', font=("Sans Serif", 9, "bold"))
 
         botao = ttk.Button(root, text="Digitar", style='Estilo.TButton',
                            command=lambda: digitar_port(token_gerado))
+        botao.grid(row=0, column=1, pady=5)
+
+        botao = ttk.Button(root, text="LOAS", style='Estilo.TButton',
+                           command=lambda: digitar_port_LOAS(token_gerado))
         botao.grid(row=0, column=2, pady=5)
 
         botao = ttk.Button(root, text="Limpar",
@@ -532,7 +536,17 @@ def grava_port(resultado_dict, token):
     valor_parcela = resultado_dict['tabelas_portabilidade'][0]['parcela']
     prazo = resultado_dict['tabelas_portabilidade'][0]['prazo']
     saldo_devedor = resultado_dict['tabelas_portabilidade'][0]['contrato']
-    codigo_tabela = resultado_dict['tabelas_portabilidade'][0]['codigoTabela']
+
+    tabelas = resultado_dict["tabelas_portabilidade"]
+
+    nova_tabelas = []
+
+    for dicionario in tabelas:
+        if 'LOAS' not in dicionario['tabela'] and 'GRUPO 3' not in dicionario['grupos']:
+            nova_tabelas.append(dicionario)
+
+    codigo_tabela = nova_tabelas[0]['codigoTabela']
+
     prazo_original = prazo_origem_entry.get()
 
     body = (
@@ -571,7 +585,15 @@ def grava_refin(id_simulador, resultado_dict, token):
     prazo_restante = prazo_restante_entry.get()
     saldo_devedor = saldo_entry.get()
     parcela_original = parcela_entry.get()
-    codigo_tabela = resultado_dict['tabelas_refin_portabilidade'][0]['codigoTabela']
+    tabelas = resultado_dict["tabelas_refin_portabilidade"]
+    nova_tabelas = []
+
+    for dicionario in tabelas:
+        if 'LOAS' not in dicionario['tabela'] and 'GRUPO 3' not in dicionario['grupos']:
+            nova_tabelas.append(dicionario)
+
+    codigo_tabela = nova_tabelas[0]['codigoTabela']
+
     coeficiente = resultado_dict['tabelas_refin_portabilidade'][0]['coeficiente']
     valor_operacao = resultado_dict['tabelas_refin_portabilidade'][0]['contrato']
     valor_parcela = resultado_dict['tabelas_refin_portabilidade'][0]['parcela']
@@ -601,6 +623,109 @@ def grava_refin(id_simulador, resultado_dict, token):
         pass
     connection.close()
     return response_dict
+
+
+def grava_port_LOAS(resultado_dict, token):
+    # Essa função vai passar uma url no body com os dados retornados da função simula_port_refin
+    # O retorno é o código da simulação, selecionando a primeira tabela disponibilizada pela simulação
+    url = URL_PRODUCAO
+    path = "/proposta/etapa1-simulador"
+    cpf = cpf_entry.get()
+    data_nascimento = bdate_entry.get()
+    login_certificado = "93862_01067744509"
+    valor_operacao = resultado_dict['tabelas_portabilidade'][0]['contrato']
+    coeficiente = resultado_dict['tabelas_portabilidade'][0]['coeficiente']
+    valor_parcela = resultado_dict['tabelas_portabilidade'][0]['parcela']
+    prazo = resultado_dict['tabelas_portabilidade'][0]['prazo']
+    saldo_devedor = resultado_dict['tabelas_portabilidade'][0]['contrato']
+
+    tabelas = resultado_dict["tabelas_portabilidade"]
+
+    nova_tabelas = []
+
+    for dicionario in tabelas:
+        if 'LOAS' in dicionario['tabela'] and 'GRUPO LOAS 3' not in dicionario['grupos']:
+            nova_tabelas.append(dicionario)
+
+    codigo_tabela = nova_tabelas[0]['codigoTabela']
+
+    prazo_original = prazo_origem_entry.get()
+
+    body = (
+        f"produto=D&tipo_operacao=003500&averbador=3&convenio=3&cpf={cpf}"
+        f"&data_nascimento={data_nascimento}&login_certificado={login_certificado}&valor_operacao={valor_operacao}"
+        f"&coeficiente={coeficiente}&valor_parcela={valor_parcela}&prazo={prazo}&saldo_devedor={saldo_devedor}"
+        f"&codigo_tabela={codigo_tabela}&prazo_original={prazo_original}"
+    )
+
+    connection = http.client.HTTPSConnection(url)
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": " PHPSESSID=cup7bgnk6ou2nppmvlh5hlf20o",
+    }
+
+    connection.request("POST", path, body, headers)
+    response = connection.getresponse()
+    content = response.read().decode("utf-8")
+    response_dict = json.loads(content)
+    if response_dict['erro'] == True:
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict['mensagem']}")
+    else:
+        pass
+    connection.close()
+    return response_dict
+
+
+def grava_refin_LOAS(id_simulador, resultado_dict, token):
+    # Essa função vai passar uma url no body com os dados do refin e salvar no id_simulador da função grava_port
+    # O retorno é o código da simulação, adicionando os dados da portabilidade ao código da simulação
+    url = URL_PRODUCAO
+    path = "/proposta/etapa1-refin-portabilidade"
+    banco_compra = banco_origem_entry.get()
+    contrato_compra = contrato_entry.get()
+    prazo_restante = prazo_restante_entry.get()
+    saldo_devedor = saldo_entry.get()
+    parcela_original = parcela_entry.get()
+    tabelas = resultado_dict["tabelas_refin_portabilidade"]
+    nova_tabelas = []
+
+    for dicionario in tabelas:
+        if 'LOAS' not in dicionario['tabela'] and 'GRUPO LOAS 3' not in dicionario['grupos']:
+            nova_tabelas.append(dicionario)
+
+    codigo_tabela = nova_tabelas[0]['codigoTabela']
+
+    coeficiente = resultado_dict['tabelas_refin_portabilidade'][0]['coeficiente']
+    valor_operacao = resultado_dict['tabelas_refin_portabilidade'][0]['contrato']
+    valor_parcela = resultado_dict['tabelas_refin_portabilidade'][0]['parcela']
+    body = (
+        f"id_simulador={id_simulador}&banco_compra={banco_compra}&contrato_compra={contrato_compra}&prazo_restante={prazo_restante}"
+        f"&saldo_devedor={saldo_devedor}&parcela_original={parcela_original}&prazo=84"
+        f"&codigo_tabela={codigo_tabela}&coeficiente={coeficiente}&valor_operacao={valor_operacao}&valor_parcela={valor_parcela}"
+    )
+
+    connection = http.client.HTTPSConnection(url)
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": " PHPSESSID=cup7bgnk6ou2nppmvlh5hlf20o",
+    }
+
+    connection.request("POST", path, body, headers)
+    response = connection.getresponse()
+    content = response.read().decode("utf-8")
+    response_dict = json.loads(content)
+    if response_dict['erro'] == True:
+        # print(response_dict)
+        JanelaComConsole.adicionar_print(JanelaComConsole, f"{response_dict['mensagem']}")
+
+    else:
+        # print(f"{response_dict['mensagem']}")
+        pass
+    connection.close()
+    return response_dict
+
 
 
 def dados_pessoais(id_simulador, token):
@@ -749,6 +874,25 @@ def digitar_port(token_gerado):
             JanelaComConsole, "Falha ao enviar o link, proposta cancelada")
     JanelaComConsole.adicionar_print(
         JanelaComConsole, f"{proposta['mensagem']}\nAF Port: {proposta['codigo']}\nAF Refin: {proposta['codigo_refin_port']}\n{proposta['url_formalizacao']}\n")
+
+
+def digitar_port_LOAS(token_gerado):
+    simula_port = simula_port_refin(token_gerado)
+    gravar_port = grava_port_LOAS(simula_port, token_gerado)
+    id_simulador = gravar_port["id_simulador"]
+    grava_refin_LOAS(id_simulador, simula_port, token_gerado)
+    cadastro_cliente = dados_pessoais(id_simulador, token_gerado)
+    codigo_cliente = cadastro_cliente["codigo_cliente"]
+    proposta = cadastro_proposta(token_gerado, codigo_cliente, id_simulador)
+    try:
+        envio_link(token_gerado, proposta['codigo_refin_port'])
+    except:
+        JanelaComConsole.adicionar_print(
+            JanelaComConsole, "Falha ao enviar o link, proposta cancelada")
+    JanelaComConsole.adicionar_print(
+        JanelaComConsole, f"{proposta['mensagem']}\nAF Port: {proposta['codigo']}\nAF Refin: {proposta['codigo_refin_port']}\n{proposta['url_formalizacao']}\n")
+
+
 
 
 if __name__ == "__main__":
