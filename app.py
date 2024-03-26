@@ -541,9 +541,14 @@ def grava_port(resultado_dict, token):
 
     nova_tabelas = []
 
-    for dicionario in tabelas:
-        if 'LOAS' not in dicionario['tabela'] and 'GRUPO 3' not in dicionario['grupos']:
-            nova_tabelas.append(dicionario)
+    try:
+        for dicionario in tabelas:
+            if 'LOAS' not in dicionario['tabela'] and 'GRUPO 2' in dicionario['grupos']:
+                nova_tabelas.append(dicionario)
+    except:
+        for dicionario in tabelas:
+            if 'LOAS' not in dicionario['tabela'] and 'GRUPO 3' in dicionario['grupos']:
+                nova_tabelas.append(dicionario)
 
     codigo_tabela = nova_tabelas[0]['codigoTabela']
 
@@ -588,10 +593,15 @@ def grava_refin(id_simulador, resultado_dict, token):
     tabelas = resultado_dict["tabelas_refin_portabilidade"]
     nova_tabelas = []
 
-    for dicionario in tabelas:
-        if 'LOAS' not in dicionario['tabela'] and 'GRUPO 3' not in dicionario['grupos']:
-            nova_tabelas.append(dicionario)
-
+    try:
+        for dicionario in tabelas:
+            if 'LOAS' not in dicionario['tabela'] and 'GRUPO 2' in dicionario['grupos']:
+                nova_tabelas.append(dicionario)
+    except:
+        for dicionario in tabelas:
+            if 'LOAS' not in dicionario['tabela'] and 'GRUPO 3' in dicionario['grupos']:
+                nova_tabelas.append(dicionario)
+    
     codigo_tabela = nova_tabelas[0]['codigoTabela']
 
     coeficiente = resultado_dict['tabelas_refin_portabilidade'][0]['coeficiente']
@@ -644,9 +654,11 @@ def grava_port_LOAS(resultado_dict, token):
     nova_tabelas = []
 
     for dicionario in tabelas:
-        if 'LOAS' in dicionario['tabela'] and 'GRUPO LOAS 3' not in dicionario['grupos']:
+        if 'LOAS' in dicionario['tabela'] and 'GRUPO LOAS 3' in dicionario['grupos']:
             nova_tabelas.append(dicionario)
 
+    print(nova_tabelas[0])
+    
     codigo_tabela = nova_tabelas[0]['codigoTabela']
 
     prazo_original = prazo_origem_entry.get()
@@ -691,7 +703,7 @@ def grava_refin_LOAS(id_simulador, resultado_dict, token):
     nova_tabelas = []
 
     for dicionario in tabelas:
-        if 'LOAS' not in dicionario['tabela'] and 'GRUPO LOAS 3' not in dicionario['grupos']:
+        if 'LOAS' in dicionario['tabela'] and 'GRUPO LOAS 3' in dicionario['grupos']:
             nova_tabelas.append(dicionario)
 
     codigo_tabela = nova_tabelas[0]['codigoTabela']
