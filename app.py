@@ -257,7 +257,7 @@ URL_PRODUCAO = "webservice.facta.com.br"
 URL_HOMOLOGACAO = "webservice-homol.facta.com.br"
 
 
-def gerar_token():
+def get_token():
     url = URL_PRODUCAO
     path = "/gera-token"
     usuario = "93862"
@@ -283,7 +283,7 @@ def gerar_token():
         return None
 
 
-token_gerado = gerar_token()
+token_gerado = get_token()
 
 
 def remove_special_char(name):
@@ -291,24 +291,25 @@ def remove_special_char(name):
     return text
 
 
-def obter_cidade(token, uf=str, nome=str):
-    # Função para buscar o código da cidade na api
-    if nome[-1] == " ":
-        nome[-1] = ""
-    uf = uf.upper()
-    nome = nome.upper()
-    nome = nome.replace("Ã", "A").replace(
-        "À", "A").replace("Á", "A").replace("Â", "A")
-    nome = nome.replace("Õ", "O").replace(
-        "Ò", "O").replace("Ó", "O").replace("Ô", "O")
-    nome = nome.replace("È", "E").replace("É", "E").replace("Ê", "E")
-    nome = nome.replace("Í", "I").replace("Ì", "I").replace("Î", "I")
-    nome = nome.replace("Ú", "U").replace("Ù", "U").replace("Û", "U")
-    nome = nome.replace("Ç", "C")
-    nome = nome.replace(" ", "_").strip()
+def format_city(city_name):
+    if city_name[-1] == " ":
+        city_name[-1] = ""
+    city_name = city_name.upper()
+    city_name = city_name.replace("Ã", "A").replace("À", "A").replace("Á", "A").replace("Â", "A")
+    city_name = city_name.replace("Õ", "O").replace("Ò", "O").replace("Ó", "O").replace("Ô", "O")
+    city_name = city_name.replace("È", "E").replace("É", "E").replace("Ê", "E")
+    city_name = city_name.replace("Í", "I").replace("Ì", "I").replace("Î", "I")
+    city_name = city_name.replace("Ú", "U").replace("Ù", "U").replace("Û", "U")
+    city_name = city_name.replace("Ç", "C")
+    city_name = city_name.replace(" ", "_").strip()
+    return city_name
 
+
+def get_city(token, uf=str, nome=str):
+    cidade = format_city(nome)
+    uf = uf.upper()
     url = URL_PRODUCAO
-    endpoint = f"/proposta-combos/cidade?estado={uf}&nome_cidade={nome}"
+    endpoint = f"/proposta-combos/cidade?estado={uf}&nome_cidade={cidade}"
 
     headers = {
         "Authorization": f"Bearer {token}",
@@ -348,8 +349,7 @@ def select_file_facta():
         sexo = str(base['SEXO'].values[0])[0]
         if sexo == "n":
             sexo = "F"
-        identidade = str(base['IDENTIDADE'].values[0]).replace(
-            "-", "").replace(".", "")
+        identidade = str(base['IDENTIDADE'].values[0]).replace("-", "").replace(".", "")
         mae = str(base['MAE'].values[0]).upper()
         pai = str(base['PAI'].values[0]).upper()
         uf_nascimento = str(base['UF_NASCIMENTO'].values[0]).upper()
@@ -360,18 +360,15 @@ def select_file_facta():
         cep = str(base['CEP'].values[0]).replace("-", "").replace(".", "")
         endereco = remove_special_char(str(base['ENDERECO'].values[0]).upper())
         uf_endereco = str(base['UF_ENDERECO'].values[0]).upper()
-        numero = str(base['NUMERO'].values[0]).replace(
-            "-", "").replace(".", "").strip()
+        numero = str(base['NUMERO'].values[0]).replace("-", "").replace(".", "").strip()
         if numero == "SN":
             numero = "1"
         cidade_endereco = str(base['CIDADE'].values[0]).upper()
         bairro = str(base['BAIRRO'].values[0]).upper()
         especie = str(base['ESPECIE'].values[0])
-        matricula = str(base['MATRICULA'].values[0]).replace(
-            "-", "").replace(".", "").replace("[", "").replace("]", "").replace("'", "").strip()
+        matricula = str(base['MATRICULA'].values[0]).replace("-", "").replace(".", "").replace("[", "").replace("]", "").replace("'", "").strip()
         matricula = int(matricula)
-        salario = str(base['SALARIO'].values[0]).replace(".", "").replace(",", ".").replace(
-            "R", "").replace("$", "").replace("[", "").replace("]", "").replace("'", "").strip()
+        salario = str(base['SALARIO'].values[0]).replace(".", "").replace(",", ".").replace("R", "").replace("$", "").replace("[", "").replace("]", "").replace("'", "").strip()
         uf_nb = str(base['UF_NB'].values[0]).upper()
         banco = str(base['BANCO_NB'].values[0])
         agencia = str(base['AGENCIA_NB'].values[0])
@@ -379,13 +376,10 @@ def select_file_facta():
         banco_port = str(base['BANCO_PORT'].values[0])
         if banco_port == "626":
             banco_port = "336"
-        contrato_port = str(base['NUM_CONTRATO'].values[0]).replace(
-            "-", "").replace("/", "").replace("_", "")
-        parcela_total = str(base['NUM_PARCELA_TOTAL'].values[0]).replace(
-            "[", "").replace("]", "").replace("'", "")
+        contrato_port = str(base['NUM_CONTRATO'].values[0]).replace("-", "").replace("/", "").replace("_", "")
+        parcela_total = str(base['NUM_PARCELA_TOTAL'].values[0]).replace("[", "").replace("]", "").replace("'", "")
         parcela_restante = str(base['PAR_RESTANTE'].values[0])
-        parcela = str(base['PARCELA'].values[0]).replace(
-            ".", "").replace(",", ".")
+        parcela = str(base['PARCELA'].values[0]).replace(".", "").replace(",", ".")
         saldo = str(base['SALDO'].values[0]).replace(".", "").replace(",", ".")
         
         # Preenchendo os entrys da janela do tkinter com os valores recebidos pelo excel
@@ -653,12 +647,16 @@ def grava_port_LOAS(resultado_dict, token):
 
     nova_tabelas = []
 
-    for dicionario in tabelas:
-        if 'LOAS' in dicionario['tabela'] and 'GRUPO LOAS 3' in dicionario['grupos']:
-            nova_tabelas.append(dicionario)
-
-    print(nova_tabelas[0])
+    try:
+        for dicionario in tabelas:
+            if 'LOAS' in dicionario['tabela'] and 'GRUPO LOAS 2' in dicionario['grupos']:
+                nova_tabelas.append(dicionario)
+    except:
+        for dicionario in tabelas:
+            if 'LOAS' in dicionario['tabela'] and 'GRUPO LOAS 3' in dicionario['grupos']:
+                nova_tabelas.append(dicionario)
     
+    print(nova_tabelas)
     codigo_tabela = nova_tabelas[0]['codigoTabela']
 
     prazo_original = prazo_origem_entry.get()
@@ -702,10 +700,15 @@ def grava_refin_LOAS(id_simulador, resultado_dict, token):
     tabelas = resultado_dict["tabelas_refin_portabilidade"]
     nova_tabelas = []
 
-    for dicionario in tabelas:
-        if 'LOAS' in dicionario['tabela'] and 'GRUPO LOAS 3' in dicionario['grupos']:
-            nova_tabelas.append(dicionario)
-
+    try:
+        for dicionario in tabelas:
+            if 'LOAS' in dicionario['tabela'] and 'GRUPO LOAS 2' in dicionario['grupos']:
+                nova_tabelas.append(dicionario)
+    except:
+        for dicionario in tabelas:
+            if 'LOAS' in dicionario['tabela'] and 'GRUPO LOAS 3' in dicionario['grupos']:
+                nova_tabelas.append(dicionario)
+    
     codigo_tabela = nova_tabelas[0]['codigoTabela']
 
     coeficiente = resultado_dict['tabelas_refin_portabilidade'][0]['coeficiente']
@@ -739,7 +742,6 @@ def grava_refin_LOAS(id_simulador, resultado_dict, token):
     return response_dict
 
 
-
 def dados_pessoais(id_simulador, token):
     # Essa função vai passar uma url no body com os dados do cliente e salvar no id_simulador da função grava_port
     # Que já possui os dados do refin da função grava_refin
@@ -757,7 +759,7 @@ def dados_pessoais(id_simulador, token):
     data_expedicao = "16/05/2017"
     estado_natural = uf_nascimento_entry.get()
     cidade_name = city_entry.get()
-    cidade_natural = obter_cidade(token_gerado, estado_rg, cidade_name)
+    cidade_natural = get_city(token_gerado, estado_rg, cidade_name)
     nacionalidade = "1"
     celular = cel_entry.get()
     renda = renda_entry.get()
@@ -768,7 +770,7 @@ def dados_pessoais(id_simulador, token):
     bairro = bairro_entry.get()
     estado = uf_endereco_entry.get()
     cidade_name = cidade_end_entry.get()
-    cidade = obter_cidade(token_gerado, estado, cidade_name)
+    cidade = get_city(token_gerado, estado, cidade_name)
     nome_mae = mae_entry.get()
     nome_pai = pai_entry.get()
     valor_patrimonio = "1"
@@ -840,7 +842,7 @@ def cadastro_proposta(token, codigo_cliente, id_simulador):
         json_content = content[json_start_index:]
         response_dict = json.loads(json_content)
         JanelaComConsole.adicionar_print(
-            JanelaComConsole, f"Resposta ao gravar: {response_dict['mensagem']}")
+            JanelaComConsole, f"{response_dict['mensagem']}")
         return response_dict
     else:
         JanelaComConsole.adicionar_print(
