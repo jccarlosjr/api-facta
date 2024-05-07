@@ -1,6 +1,8 @@
 import http.client, base64, json, sys, os, re, pandas as pd, tkinter as tk
 from tkinter import ttk, filedialog, scrolledtext
 from urllib.parse import urlencode
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 
 
 class JanelaComConsole:
@@ -22,8 +24,7 @@ class JanelaComConsole:
         info_label = ttk.Label(root, text="DADOS DO CLIENTE", font=nova_fonte)
         info_label.grid(row=1, column=0, columnspan=5, pady=5)
 
-        parcela_confirma = ttk.Button(
-            root, text="Select", style='Estilo.TButton', command=lambda: select_file_facta())
+        parcela_confirma = ttk.Button(root, text="Select", style='Estilo.TButton', command=lambda: select_file_facta())
         parcela_confirma.grid(row=0, column=0, pady=5)
 
         style_btt = ttk.Style()
@@ -220,6 +221,7 @@ class JanelaComConsole:
         global saldo_entry
         saldo_entry = ttk.Entry(root, justify="center")
         saldo_entry.grid(row=13, column=4, padx=2)
+
 
     class ConsoleRedirector:
         def __init__(self, console):
@@ -911,6 +913,7 @@ def digitar_port_LOAS(token_gerado):
 
 if __name__ == "__main__":
     root = tk.Tk()
+    style = ttk.Style("yeti")
     app = JanelaComConsole(root)
     caminho_icone = "favicon.ico"
     root.iconbitmap(caminho_icone)
