@@ -308,29 +308,31 @@ def format_city(city_name):
 
 
 def get_city(token, uf=str, nome=str):
-    cidade = format_city(nome)
+    city = format_city(nome)
     uf = uf.upper()
     url = URL_PRODUCAO
-    endpoint = f"/proposta-combos/cidade?estado={uf}&nome_cidade={cidade}"
+    endpoint = f"/proposta-combos/cidade?estado={uf}&nome_cidade={city}"
 
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
     }
 
-    conn = http.client.HTTPSConnection(url)
-    conn.request("GET", endpoint, headers=headers)
+    connection = http.client.HTTPSConnection(url)
+    connection.request("GET", endpoint, headers=headers)
 
-    response = conn.getresponse()
+    response = connection.getresponse()
     city = json.loads(response.read().decode("utf-8"))
-    conn.close()
+    connection.close()
+
     if city['erro'] == True:
         JanelaComConsole.adicionar_print(
             JanelaComConsole, f"Cidade não encontrada")
     else:
-        cidade = city['cidade']
-        chave_cidade = list(cidade.keys())[0]
-    return chave_cidade
+        city = city['cidade']
+        city_key = list(city.keys())[0]
+        
+    return city_key
 
 
 def select_file_facta():
@@ -922,3 +924,4 @@ if __name__ == "__main__":
     root.protocol("WM_DELETE_WINDOW", app.restaurar_print_original)
     JanelaComConsole.centralizar_janela(root)
     root.mainloop()
+    
